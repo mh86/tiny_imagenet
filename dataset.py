@@ -57,19 +57,24 @@ class ImagenetDataset(Dataset):
     def load_images(self, main_dir):
         n, image_list = self.get_image_paths(main_dir)
         images = np.zeros((n, 64, 64, 3))
-        if self.mode == 'train':
-            labels = np.zeros(n)
+        if self.mode != 'test':
+            labels = []
         for i, image_path in enumerate(image_list):
             images[i] = create_image(image_path)
             if self.mode == 'train':
-                labels[i] = self.label_ind[image_path.split('/')[3]]
+                labels.append(image_path.split('/')[3])
         if self.mode == 'val':
-            labels = np.array(pd.read_csv(main_dir + '/' + self.mode +
-                                          '/val_annotations.txt', sep='\t', header=None)[1].values)
+            labels = pd.read_csv(main_dir + '/' + self.mode +
+                                          '/val_annotations.txt', sep='\t', header=None)[1].values
+
         if self.mode != 'test':
+            labels = np.array([self.label_to_ind(label) for label in labels])
             return images, labels
         else:
             return images
+
+    def label_to_ind(self, label):
+        return self.label_ind[label]
 
 
 # # Sanity check
