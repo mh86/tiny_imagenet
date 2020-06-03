@@ -17,9 +17,9 @@ def main():
     train_transforms = Compose([Normalize(112.4660, 70.8325), RandomRotation(30), ToTensor()])
     test_transforms = ToTensor()
 
-    train_loader = DataLoader(ImagenetDataset(main_dir, 'train', train_transforms), batch_size=64)
-    val_loader = DataLoader(ImagenetDataset(main_dir, 'val', test_transforms), batch_size=64)
-    test_loader = DataLoader(ImagenetDataset(main_dir, 'test', test_transforms), batch_size=64)
+    train_loader = DataLoader(ImagenetDataset(main_dir, 'train', train_transforms), batch_size=64, shuffle=True)
+    val_loader = DataLoader(ImagenetDataset(main_dir, 'val', test_transforms), batch_size=64, shuffle=False)
+    test_loader = DataLoader(ImagenetDataset(main_dir, 'test', test_transforms), batch_size=64, shuffle=False)
 
     
 
