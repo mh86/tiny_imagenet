@@ -50,8 +50,12 @@ class ImagenetDataset(Dataset):
             subfolders = [f.path for f in scandir(main_dir + '/' + self.mode) if f.is_dir()]
             for path in subfolders:
                 image_list.extend([f.path for f in scandir(path + "/images") if f.is_file()])
-        else:
+        elif self.mode == 'test':
             image_list = [f.path for f in scandir(main_dir + '/' + self.mode + "/images") if f.is_file()]
+        elif self.mode == 'val':
+            df = pd.read_csv(main_dir + '/' + self.mode +
+                                          '/val_annotations.txt', sep='\t', header=None)[0].values
+            image_list = [main_dir + '/' + self.mode + '/images/' + x for x in df]
         return len(image_list), image_list
 
     def load_images(self, main_dir):
